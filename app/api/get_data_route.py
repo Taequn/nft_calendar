@@ -11,7 +11,7 @@ def get_data(filename):
         "listings": "initial_parse",
         "twitter": "twitter_data",
         "discord": "parsed_discord_members",
-        "everything": "enriched_data_results"
+        "all": "enriched_data_results"
     }
     
     # Checks
