@@ -23,6 +23,20 @@ def run_daily_parse():
 
     df_final.to_csv('data/enriched_data_results.csv', index=False)
 
-
+if __name__ == '__main__':
+    action = sys.argv[1]
+    
+    if action == "listings":
+        run_listing_parser()
+    
+    if action == "twitter":
+        run_twitter_parser()
+    
+    if action == "discord":
+        enrich_collection_data()
+    
+    if action == "all":
+        run_daily_parse()
+    
 
 

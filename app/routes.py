@@ -1,33 +1,65 @@
-from flask import Flask, jsonify, request, abort
+from flask import Blueprint, jsonify, request, abort
 from functools import wraps
-#import os
 import pandas as pd
-#from dotenv import load_dotenv
+import os
+import concurrent.futures
+from parsers.listing_parser import run_listing_parser
+from parsers.twitter_parser_go.go_execute import run_twitter_parser
+from parsers.discord_members_parser import enrich_collection_data
+from daily_parse import run_daily_parse
 
-app = Flask(__name__)
+api = Blueprint('api', __name__)
 
-#load_dotenv()
-#API_KEY = os.getenv('API_KEY')
-
-def require_api_key(view_function):
-    @wraps(view_function)
-    def decorated_function(*args, **kwargs):
-        if request.args.get('key') and request.args.get('key') == API_KEY:
-            return view_function(*args, **kwargs)
-        else:
-            abort(401)
-    return decorated_function
-
-#Запрос по формату: http://ADDRESS/api/v1/data?key=api_key
-#Example: http://127.0.0.1:5000/api/v1/data?key=TAQ3pTivtFNVT1bxfcn2aCDVDY2wBvPgWwjXG80mJ7RUQoyQzKanH38z57VhqTTJ9Gv2jpC46
-@app.route('/api/v1/data', methods=['GET'])
-#@require_api_key
-def get_data():
-    #print(API_KEY)
-    # Читаем данные, которые выгрузили из flask_parse.py
-    data = pd.read_csv("data/enriched_data_results.csv").drop_duplicates(subset=['Collection']).to_dict(orient='records')
-    # Возвращаем данные в формате JSON
+@api.route('/v1/data/<filename>', methods=['GET'])
+def get_data(filename):
+    data_dict = {
+        "get_listings": "initial_parse",
+        "get_twitter": "twitter_data",
+        "get_discord": "parsed_discord_members",
+        "get_everything": "enriched_data_results"
+    }
+    
+    # Checks
+    if filename not in data_dict:
+        print(f"Invalid filename: {filename}")
+        abort(404)
+    if not os.path.isfile(f"data/{data_dict[filename]}.csv"):
+        print(f"File not found: {filename}")
+        abort(404)
+    
+    # Load CSV file
+    data = pd.read_csv(f"data/{data_dict[filename]}.csv").drop_duplicates(subset=['Collection']).to_dict(orient='records')
     return jsonify(data)
 
-if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+
+@api.route("v1/parser/<action>", methods=['GET'])
+def run_parser(action):
+    success_dict = {
+        "action": action,
+        "status": "success",
+        "message": "Parser successfully started"
+    }
+    
+    try:
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            if action == "listings":
+                executor.submit(run_listing_parser)
+            
+            if action == "twitter":
+                executor.submit(run_twitter_parser)
+            
+            if action == "discord":
+                executor.submit(enrich_collection_data)
+            
+            if action == "all":
+                executor.submit(run_daily_parse)
+    except Exception as e:
+            fail_dict = {
+                "action": action,
+                "status": "fail",
+                "message": "Parser failed to start",
+                "error": str(e)
+            }
+            return jsonify(fail_dict)
+            
+    return jsonify(success_dict)
