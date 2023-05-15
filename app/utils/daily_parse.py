@@ -1,12 +1,8 @@
-import sys
-import os
 import pandas as pd
-root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(root_dir)
 
-from nft_calendar.parsers.listing_parser import run_listing_parser
-from nft_calendar.parsers.twitter_parser_go.go_execute import run_twitter_parser
-from nft_calendar.parsers.discord_members_parser import enrich_collection_data
+from parsers.listing_parser import run_listing_parser
+from parsers.twitter_parser_go.go_execute import run_twitter_parser
+from parsers.discord_members_parser import enrich_collection_data
 
 def run_daily_parse():
     run_listing_parser()
@@ -22,21 +18,6 @@ def run_daily_parse():
     df_final = df_final.merge(df3[["Collection", "Twitter Followers"]], on="Collection", how="left")
 
     df_final.to_csv('data/enriched_data_results.csv', index=False)
-
-if __name__ == '__main__':
-    action = sys.argv[1]
-    
-    if action == "listings":
-        run_listing_parser()
-    
-    if action == "twitter":
-        run_twitter_parser()
-    
-    if action == "discord":
-        enrich_collection_data()
-    
-    if action == "all":
-        run_daily_parse()
     
 
 

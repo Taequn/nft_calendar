@@ -6,7 +6,7 @@ import concurrent.futures
 from parsers.listing_parser import run_listing_parser
 from parsers.twitter_parser_go.go_execute import run_twitter_parser
 from parsers.discord_members_parser import enrich_collection_data
-from daily_parse import run_daily_parse
+from app.utils.daily_parse import run_daily_parse
 
 api = Blueprint('api', __name__)
 
