@@ -8,10 +8,10 @@ data_api = Blueprint('data_api', __name__)
 @data_api.route('/v1/data/<filename>', methods=['GET'])
 def get_data(filename):
     data_dict = {
-        "get_listings": "initial_parse",
-        "get_twitter": "twitter_data",
-        "get_discord": "parsed_discord_members",
-        "get_everything": "enriched_data_results"
+        "listings": "initial_parse",
+        "twitter": "twitter_data",
+        "discord": "parsed_discord_members",
+        "everything": "enriched_data_results"
     }
     
     # Checks
