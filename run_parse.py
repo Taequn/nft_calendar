@@ -7,18 +7,18 @@ if __name__ == '__main__':
     action = sys.argv[1]
     parser = ParserProvider()
     
-    if action == "listings":
+    if action.lower() == "listings":
         listing = sys.argv[2]
         if listing:
             parser.make_listing_parser(listing).parse()
         else:
             run_listing_parser()
     
-    if action == "twitter":
-        parser.make_socials_parser("twitter").parse()
+    if action.lower() == "twitter":
+        parser.make_socials_parser(action).parse()
     
-    if action == "discord":
-        parser.make_socials_parser("discord").parse()
+    if action.lower() == "discord":
+        parser.make_socials_parser(action).parse()
     
-    if action == "all":
+    if action.lower() == "all":
         run_daily_parse()
