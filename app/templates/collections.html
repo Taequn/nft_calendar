@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Collections</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+  <style>
+    body {
+      padding: 0 15px;  /* Add 15px of padding to the left and right of the body */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <table id="collectionsTable" class="display">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Link</th>
+          <th>Collection</th>
+          <th>Discord</th>
+          <th>Discord Members</th>
+          <th>Twitter</th>
+          <th>Twitter Followers</th>
+          <th>Supply</th>
+          <th>Platform</th>
+          <th>Price</th>
+          <th>Listing</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+        <tr>
+          <td>{{ row.Date }}</td>
+          <td>{{ row.Link }}</td>
+          <td>{{ row.Collection }}</td>
+          <td>{{ row.Discord }}</td>
+          <td>{{ row['Discord Total Members'] }}</td>
+          <td>{{ row.Twitter }}</td>
+          <td>{{ row['Twitter followers'] }}</td>
+          <td>{{ row.Supply }}</td>
+          <td>{{ row.Platform }}</td>
+          <td>{{ row.Price }}</td>
+          <td>{{ row.Listing }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    $(document).ready(function () {
+      $('#collectionsTable').DataTable({
+        pageLength: 100  // Set the default page length to 100 entries
+      });
+    });
+  </script>
+</body>
+</html>

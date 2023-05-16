@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from parsers.listing_parser import run_listing_parser
-from parsers.twitter_parser_go.go_execute import run_twitter_parser
-from parsers.discord_members_parser import enrich_collection_data
+from parsers.twitter_parser_go.TwitterParser import run_twitter_parser
+from parsers.discord_parser.DiscordParser import enrich_collection_data
 from app.utils.daily_parse import run_daily_parse
 
 parser_api = Blueprint('parser_api', __name__)
