@@ -57,6 +57,7 @@ class AlphaBotParser(AbstractParser):
 
         try:
             picture = entry['twitterProfileImage']
+            picture = picture.replace("_normal", "_400x400")
         except:
             picture = ""
 
@@ -74,7 +75,7 @@ class AlphaBotParser(AbstractParser):
         attempts = 0
 
         while True:
-            if (page_number == 25):
+            if (page_number == 20):
                 break
             logging.info("AlphaBot page " + str(page_number+1) + " checked")
             #print("AlphaBot page " + str(page_number) + " checked")

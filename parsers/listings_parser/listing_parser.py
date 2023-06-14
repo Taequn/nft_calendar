@@ -10,17 +10,17 @@ logging.basicConfig(level=logging.INFO)
 def run_listing_parser():
     parser = ParserProvider()
     try:
-        df1 = parser.make_parser('alphabot').parse()
+        df1 = parser.make_listing_parser('alphabot').parse()
     except:
         df1 = pd.DataFrame()
         logging.error('Error checking alphabot.app')
     try:
-        df2 = parser.make_parser('mintyscore').parse()
+        df2 = parser.make_listing_parser('mintyscore').parse()
     except:
         df2 = pd.DataFrame()
         logging.error('Error checking mintyscore.com')
     try:
-        df3 = parser.make_parser('oxalus').parse()
+        df3 = parser.make_listing_parser('oxalus').parse()
     except:
         df3 = pd.DataFrame()
         logging.error('Error checking oxalus.io')

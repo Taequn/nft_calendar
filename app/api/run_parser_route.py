@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
-from parsers.listing_parser import run_listing_parser
-from parsers.twitter_parser_go.TwitterParser import run_twitter_parser
-from parsers.discord_parser.DiscordParser import enrich_collection_data
+from parsers.listings_parser.listing_parser import run_listing_parser
+from parsers.twitter_parser_go import TwitterParser
+from parsers.discord_parser import DiscordParser
 from app.utils.daily_parse import run_daily_parse
 
 parser_api = Blueprint('parser_api', __name__)
@@ -16,16 +16,18 @@ def run_parser(action):
     }
     
     try:
-            if action == "listings":
-                run_listing_parser()
-            
-            if action == "twitter":
-                run_twitter_parser()
-            
-            if action == "discord":
-                enrich_collection_data()
-            if action == "all":
-                run_daily_parse()
+        if action == "listings":
+            run_listing_parser()
+        
+        if action == "twitter":
+            twitter = TwitterParser()
+            twitter.parse()
+        
+        if action == "discord":
+            discord = DiscordParser()
+            discord.parse()
+        if action == "all":
+            run_daily_parse()
     
     except Exception as e:
             fail_dict = {
