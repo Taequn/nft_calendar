@@ -8,26 +8,23 @@ from parsers.ParserProvider import ParserProvider
 logging.basicConfig(level=logging.INFO)
 
 def run_listing_parser():
+    parser_names = ['mintyscore', 'oxalus', 'alphabot', 
+                    'upcomingnft', 'cryptocom',
+                    'raritytools', 'seafloor']
+    df_array = []
     parser = ParserProvider()
-    try:
-        df1 = parser.make_listing_parser('alphabot').parse()
-    except:
-        df1 = pd.DataFrame()
-        logging.error('Error checking alphabot.app')
-    try:
-        df2 = parser.make_listing_parser('mintyscore').parse()
-    except:
-        df2 = pd.DataFrame()
-        logging.error('Error checking mintyscore.com')
-    try:
-        df3 = parser.make_listing_parser('oxalus').parse()
-    except:
-        df3 = pd.DataFrame()
-        logging.error('Error checking oxalus.io')
-
-    df = pd.concat([df1, df2, df3], ignore_index=True)
+    
+    for name in parser_names:
+        try:
+            df = parser.make_listing_parser(name).parse()
+            df_array.append(df)
+        except:
+            logging.error(f'Error parsing {name}')
+    
+    
+    df = pd.concat(df_array, ignore_index=True)
     df.to_csv('data/initial_parse.csv', index=False)
-    #df.to_csv('parsers/go_code/file.csv')
+    df.to_csv('parsers/twitter_parser_go/file.csv')
     logging.info('Data saved to initial_parse.csv')
 
 
